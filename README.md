@@ -1,13 +1,13 @@
 # Apache Geode DevOps Bash
 
-The [geode-devOps-bash](https://github.com/vmwarepivotallabs/dataTx-geode-devOps-bash) project is a set of open source scripts to automate the management of [Apache Geode](https://geode.apache.org) using bash UNIX scripts.
+The  project is a set of open source scripts to automate the management of [Apache Geode](https://geode.apache.org) using bash UNIX scripts.
 
 *Features*
 
 - Docker images for locator and cache Servers
 - Example Kubernetes (k8) service deployment
 - Security implementations
-  -  properties files with user/privileges
+  -  Properties files with user/privileges
   -  LDAP and Property file base security Manager
 - SSL/TLS key store creation and configuration
 - Password encryption configuration
@@ -62,7 +62,7 @@ See [https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions](ht
 
 The scripts expects a *setenv.sh* file to be in the current working directory or root directory of where the scripts are located.
 
-The directory [env_templates](https://github.com/vmwarepivotallabs/dataTx-gemfire-devOps-bash/tree/master/env_templates) directory file contains example *setenv.sh* scripts. These scripts contain all the needed variables to automate the management and installation of a Geode cluster.
+The directory [env_templates](/master/env_templates) directory file contains example *setenv.sh* scripts. These scripts contain all the needed variables to automate the management and installation of a Geode cluster.
 
 ### Editing configurations
 
@@ -710,22 +710,22 @@ docker network create geode-network
 ### Locator Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_locator  -t datatx-geode-locator:latest .
+docker build  -f ./Dockerfile_locator  -t apache-geode-locator:latest .
 ```
 
 ```shell script
-docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  geode-network datatx-geode-locator:latest
+docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  geode-network apache-geode-locator:latest
 ```
 
 
 ### Data node Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_dataNode  -t datatx-geode-data-node:latest .
+docker build  -f ./Dockerfile_dataNode  -t apache-geode-data-node:latest .
 ```
 
 ```shell script
-docker run --env=LOCATOR1=locator1  --hostname=server1  -p10100:10100 --network geode-network datatx-geode-data-node:latest
+docker run --env=LOCATOR1=locator1  --hostname=server1  -p 10100:10100 --network geode-network apache-geode-data-node:latest
 ```
 
 
@@ -780,8 +780,8 @@ of an Apache Geode cluster running in Kubernetes. This has been tested a KIND Ku
 Load the Locator and Data Node Docker images
 
 ```shell script
-kind load docker-image datatx-geode-locator:latest --name=kind
-kind load docker-image datatx-geode-data-node:latest --name=kind
+kind load docker-image apache-geode-locator:latest --name=kind
+kind load docker-image apache-geode-data-node:latest --name=kind
 ```
 
 Deploy Apache Geode Cluster
@@ -791,12 +791,11 @@ k apply -f cloud/k8/geode-k8.yaml
 ```
 
 
-Get a Bash shell to connect to the cluster
+Get a gfsh  to the cluster
 ```shell script
-kubectl exec --stdin --tty geode-0 -- /bin/bash
+kubectl exec --stdin --tty geode-0 -- gfsh
 ```
 
-Execute gfsh
 ```
 gfsh
 ```

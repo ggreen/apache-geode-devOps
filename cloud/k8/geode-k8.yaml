@@ -33,13 +33,13 @@ spec:
     spec:
       containers:
       - name: locator
-        image: datatx-geode-locator:latest
+        image: apache-geode-locator:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 10334
           name: locator
       - name: data-node
-        image: datatx-geode-data-node:latest
+        image: apache-geode-data-node:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 10100
