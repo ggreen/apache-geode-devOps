@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode1
+  labels:
+    run: datanode1
+spec:
+  type: NodePort
+  ports:
+    - port: 10100
+      targetPort: 10100
+      protocol: TCP
+      name: tcp
+  selector:
+    run: datanode1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datanode1
+spec:
+  selector:
+    matchLabels:
+      run: datanode1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: datanode1
+    spec:
+      containers:
+        - name: datanode1
+          env:
+            - name: LOCATOR1
+              value: locator1
+          image: apache-geode-data-node:0.0.1-SNAPSHOT
+          readinessProbe:
+            tcpSocket:
+              port: 10100
+          livenessProbe:
+            tcpSocket:
+              port: 10100
+          ports:
+            - containerPort: 443
+            - containerPort: 80

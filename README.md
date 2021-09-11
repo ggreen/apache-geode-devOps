@@ -710,22 +710,22 @@ docker network create geode-network
 ### Locator Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_locator  -t apache-geode-locator:latest .
+docker build  -f ./Dockerfile_locator  -t apache-geode-locator:0.0.1-SNAPSHOT .
 ```
 
 ```shell script
-docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  geode-network apache-geode-locator:latest
+docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  geode-network apache-geode-locator:0.0.1-SNAPSHOT
 ```
 
 
 ### Data node Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_dataNode  -t apache-geode-data-node:latest .
+docker build  -f ./Dockerfile_dataNode  -t apache-geode-data-node:0.0.1-SNAPSHOT .
 ```
 
 ```shell script
-docker run --env=LOCATOR1=locator1  --hostname=server1  -p 10100:10100 --network geode-network apache-geode-data-node:latest
+docker run --env=LOCATOR1=locator1  --hostname=server1  -p 10100:10100 --network geode-network apache-geode-data-node:0.0.1-SNAPSHOT
 ```
 
 
@@ -780,20 +780,23 @@ of an Apache Geode cluster running in Kubernetes. This has been tested a KIND Ku
 Load the Locator and Data Node Docker images
 
 ```shell script
-kind load docker-image apache-geode-locator:latest --name=kind
-kind load docker-image apache-geode-data-node:latest --name=kind
+kind load docker-image apache-geode-locator:0.0.1-SNAPSHOT --name=kind
+kind load docker-image apache-geode-data-node:0.0.1-SNAPSHOT --name=kind
 ```
 
 Deploy Apache Geode Cluster
 
+
+k run locator1 --image=apache-geode-locator --dry-run=client -o yaml  --env=LOCATOR1=locator1 --port=10334 --port=17070 --port=11099
+
 ```shell script
-k apply -f cloud/k8/geode-k8.yaml
+k apply -f cloud/k8/pods
 ```
 
 
 Get a gfsh  to the cluster
 ```shell script
-kubectl exec --stdin --tty geode-0 -- gfsh
+kubectl exec --stdin --tty locator1 -- gfsh
 ```
 
 ```
@@ -801,7 +804,7 @@ gfsh
 ```
 Connect with user admin/admin
 ```
-connect --locator=geode-0[10334]
+connect --locator=locator1[10334]
 ```
 
 Create a test region

@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: locator1
+  labels:
+    run: locator1
+spec:
+  type: NodePort
+  ports:
+    - port: 10334
+      targetPort: 10334
+      protocol: TCP
+      name: tcp
+    - port: 11099
+      protocol: TCP
+      name: jmx
+  selector:
+    run: locator1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locator1
+spec:
+  selector:
+    matchLabels:
+      run: locator1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: locator1
+    spec:
+      containers:
+        - name: locators
+          image: apache-geode-locator:0.0.1-SNAPSHOT
+          readinessProbe:
+            tcpSocket:
+              port: 10334
+          livenessProbe:
+            tcpSocket:
+              port: 10334
+          ports:
+            - containerPort: 443
+            - containerPort: 80
